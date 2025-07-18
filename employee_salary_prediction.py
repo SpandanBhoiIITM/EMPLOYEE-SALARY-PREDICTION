@@ -152,37 +152,3 @@ accuracy_score(y_test,predict)
 import joblib
 joblib.dump(model1, 'model1_random_forest.pkl')
 
-!pip install streamlit pyngrok --quiet
-import joblib
-import streamlit as st
-
-model = joblib.load("model1_random_forest.pkl")
-
-st.title("💼 Employee Income Classifier")
-st.markdown("Predict whether income is `<=50K` or `>50K` based on employee attributes.")
-
-# Input fields
-age = st.number_input("Age", min_value=17, max_value=90, value=30)
-workclass = st.selectbox("Workclass", [1, 2, 3, 4, 5, 6, 7, 8])  # integer-encoded
-fnlwgt = st.number_input("FNLWGT", min_value=10000, max_value=1000000, value=300000)
-edu_num = st.slider("Education Number", 1, 16, 10)
-marital_status = st.selectbox("Marital Status", [0, 1, 2, 3, 4, 5, 6])  # encoded
-occupation = st.selectbox("Occupation", list(range(0, 15)))
-relationship = st.selectbox("Relationship", list(range(0, 6)))
-race = st.selectbox("Race", list(range(0, 5)))
-gender = st.radio("Gender", ["Male", "Female"])
-gender_val = 1 if gender == "Male" else 0
-capital_gain = st.number_input("Capital Gain", 0, 100000, 0)
-capital_loss = st.number_input("Capital Loss", 0, 5000, 0)
-hours = st.slider("Hours Per Week", 1, 100, 40)
-country = st.selectbox("Native Country", list(range(0, 42)))  # encoded
-
-# Predict
-if st.button("Predict Income"):
-    input_vector = np.array([age, workclass, fnlwgt, edu_num, marital_status,
-                             occupation, relationship, race, gender_val,
-                             capital_gain, capital_loss, hours, country]).reshape(1, -1)
-
-    prediction = model.predict(input_vector)[0]
-    label = ">50K" if prediction == 1 else "<=50K"
-    st.success(f"🔮 Predicted Income: {label}")
